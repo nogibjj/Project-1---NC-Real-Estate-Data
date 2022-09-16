@@ -41,16 +41,45 @@ if __name__ == '__main__':
     # Set file where data can be found
     file = './datasets/realtor-data.csv'
     
+    # Set up a Dask Client
+    client = Client(n_workers=4)
+
     # Set dataframe variable
     datadf = readData(file)
     
-    # Create a sample set of the data
-    sample = datadf.head(100)
+    # A function to test plotting a sample set from the dataset
+    def plotSample(samples):
+        # Create a sample set of the data
+        sample = datadf.head(1000)
 
-    # Create a subset of the sample without NA values
-    subSample = sample[['bed', 'bath', 'acre_lot', 'house_size', 'zip_code', 'price']].dropna()
+        # Create a subset of the sample without NA values
+        subSample = sample[['bed', 'bath', 'acre_lot', 'house_size', 'zip_code', 'price']].dropna()
 
-    # Test the regressor on each zip code in the subset of the sample
-    for eachCode in subSample['zip_code'].unique():
-        runRegressor(subSample, eachCode)
+        # Test the regressor on each zip code in the subset of the sample
+        for eachCode in subSample['zip_code'].unique()[0:samples]:
+            runRegressor(subSample, eachCode)
+            pass
+        pass
+
+    # A function to test plotting the whole dataset
+    def plotData(plots):
+        # Drop NA values for regression
+        subSample = datadf[['bed', 'bath', 'acre_lot', 'house_size', 'zip_code', 'price']].dropna()
+
+        # Test the regressor on each zip code in the subset of the sample
+        for eachCode in subSample['zip_code'].unique()[0:plots]:
+            runRegressor(subSample, eachCode)
+            pass
+        pass
+
+    # Plot one zip code from the sample set
+    plotSample(1)
+
+    # Plot one zip code from the full data set
+    plotData(1)
+
+
+    # Close the client
+    client.close()
+
 
