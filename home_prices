@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+
+from realEstateAnalysis import dfanalysis
+from filterData import readData, filterdf
+import click
+import subprocess
+from dask.distributed import Client
+
+# build click group
+@click.group()
+def cli():
+    """This is a CLI tool to download, analyze, and filter real estate data from Kaggle."""
+
+
+# build click command
+@click.command("download_data")
+def download_data():
+    """This command will download the kaggle dataset this project has been working with."""
+    subprocess.call('download_data.sh')
+
+
+# build click command
+@click.command("analysis")
+@click.argument('file', default='datasets/realtor-data.csv')
+@click.argument('workers', default = 4)
+@click.argument('exportfile', default = 'datasets/predicted-data.csv')
+def analysis(file, workers, exportfile):
+    """This will analyze the data from the kaggle dataset and provide predicted prices."""
+    dfanalysis(file, workers, exportfile)
+
+# build click command
+@click.command()
+@click.argument('criteria')
+@click.argument('file', default='datasets/predicted-data.csv')
+def filterData(file, criteria):
+    """This will filter data from the dataset.  Filters must be written in Python syntax."""
+    # Set up a Dask Client
+    client = Client(n_workers=4)
+    print(filterdf(readData(file), criteria))
+    # Close the client
+    client.close()
+
+
+# run the click command
+if __name__ == "__main__":
+    cli.add_command(download_data)
+    cli.add_command(analysis)
+    cli.add_command(filterData)
+    cli()
