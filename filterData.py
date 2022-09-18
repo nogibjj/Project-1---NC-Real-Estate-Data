@@ -19,5 +19,5 @@ if __name__ == '__main__':
     # Set up a Dask Client
     client = Client(n_workers=4)
     # Analyze file
-    print(dask.compute(filterData(readData(), '(bath ==2) & (bed == 3)'))[0])
+    print(dask.compute(filterdf(readData(), '(bath ==2) & (bed == 3)'))[0])
 

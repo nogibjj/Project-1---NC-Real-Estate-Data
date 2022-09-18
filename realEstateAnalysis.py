@@ -2,6 +2,7 @@
 import dask.dataframe as dd
 import dask
 from dask.distributed import Client
+import numpy as np
 from sklearn import linear_model
 
 # Read in the data
@@ -25,16 +26,32 @@ def zipGroupArray(data):
     return data.groupby('zip_code').apply(groupbyRegr, meta = data)
 
 # Plot data predictions against actual data (unused needs to be modified for plotting since regression functions have changed)
-def plotPrediction(data, zipCode, predictions):
-    x, yActual, yPredicted = dask.compute(data[data['zip_code']==zipCode].loc[:,'acre_lot'], data[data['zip_code']==zipCode].loc[:,'price'], predictions)
-    plt.scatter(x, yActual)
-    plt.scatter(x, yPredicted)
-    plt.show()
-    pass
+#def plotPrediction(data, zipCode, predictions):
+    #x, yActual, yPredicted = dask.compute(data[data['zip_code']==zipCode].loc[:,'acre_lot'], data[data['zip_code']==zipCode].loc[:,'price'], predictions)
+    #plt.scatter(x, yActual)
+    #plt.scatter(x, yPredicted)
+    #plt.show()
+    #pass
 
 # Run the regression
 def runRegressor(data):
-    return dask.compute(zipGroupArray(data))
+    return dask.compute(zipGroupArray(data))[0]
+
+# Analyze data
+def dfanalysis(file, workers=4, exportFile = 'datasets/predicted-data.csv'):
+    # Set up a Dask Client
+    client = Client(n_workers=workers)
+
+    # Predict values
+    datadf = readData(file)
+    predicteddf = runRegressor(datadf)
+
+    # Export dataframe to csv
+    exportData(predicteddf, exportFile)
+    
+    # Close the client
+    client.close()
+
 
 # Exports the data to csv
 def exportData(data, file = 'datasets/predicted-data.csv'):
@@ -50,17 +67,5 @@ if __name__ == '__main__':
     # Set file where data can be found
     file = 'datasets/realtor-data.csv'
     
-    # Set up a Dask Client
-    client = Client(n_workers=4)
-
-    # Set dataframe variable
-    datadf = readData(file)
-
-    # Run regression to predict prices
-    runRegressor(datadf)
-
-    # Export dataframe to csv
-    exportData(datadf)
-
-    # Close the client
-    client.close()
+    # Analyze file
+    dfanalysis(file)
