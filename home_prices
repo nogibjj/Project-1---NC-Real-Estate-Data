@@ -29,7 +29,7 @@ def analysis(file, workers, exportfile):
     dfanalysis(file, workers, exportfile)
 
 # build click command
-@click.command()
+@click.command("filter")
 @click.argument('criteria')
 @click.argument('file', default='datasets/predicted-data.csv')
 def filterData(file, criteria):
