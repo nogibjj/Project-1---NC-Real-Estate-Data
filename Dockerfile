@@ -1,4 +1,4 @@
-# Select base container
+# Select base image
 FROM python:3.10.7-slim-bullseye
 
 # Set-up working Directory
