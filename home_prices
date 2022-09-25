@@ -16,7 +16,7 @@ def cli():
 @click.command("download_data")
 def download_data():
     """This command will download the kaggle dataset this project has been working with."""
-    subprocess.call('download_data.sh')
+    subprocess.call('./download_data.sh')
 
 
 # build click command
