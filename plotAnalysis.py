@@ -1,7 +1,12 @@
+import statsmodels.formula.api as smf
+import pandas as pd
+import numpy as np
+import altair as alt
+
 def get_reg_fit(data, yvar, xvar, alpha=0.05):
-    import statsmodels.formula.api as smf
 
     xaxis = xvar.split(" + ")[0]
+
     # Grid for predicted values
     x = data.loc[pd.notnull(data[yvar]), xaxis]
     xmin = x.min()
@@ -19,7 +24,7 @@ def get_reg_fit(data, yvar, xvar, alpha=0.05):
     # Build chart
     reg = (
         alt.Chart(predictions)
-        .mark_line(opacity=treatment)
+        .mark_line()
         .encode(
             x=xaxis,
             y=alt.Y(yvar, axis=alt.Axis(title="Price"))
