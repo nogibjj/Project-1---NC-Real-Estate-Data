@@ -56,14 +56,13 @@ def updateTables(dbname, username, passwd, hostname, portnum):
         parse_dates=["sold_date"],
         infer_datetime_format=True,
     )
-    realEstateData.index = realEstateData.index.rename('index')
+    realEstateData.loc[:, 'zip_code'] = realEstateData.loc[:, 'zip_code'].astype(str).apply(updateZip)
     realEstateData.to_sql(
         "real_estate", connection, if_exists="replace", index=False, chunksize=100_000
     )
 
+
 # Pull the real estate data into a dataframe
-
-
 def getData(dbname="realestate", username=os.getenv("AWS_REALESTATE_USERNAME"), passwd=os.getenv("AWS_REALESTATE_PASSWORD"), hostname=os.getenv("AWS_REALESTATE_HOSTNAME"), portnum=os.getenv("AWS_REALESTATE_PORT")):
     engine = create_engine(
         f"mysql://{username}:{passwd}@{hostname}:{portnum}/{dbname}")
@@ -101,6 +100,12 @@ def queryData(query, dbname="realestate", username=os.getenv("AWS_REALESTATE_USE
     )
     return realEstateData
 
+def updateZip(self):
+    self = self.split(".")[0]
+    if len(self) == 3:
+        return "00"+self
+    elif len(self) == 4:
+        return "0"+self
 
 if __name__ == "__main__":
     myuser = os.getenv("AWS_REALESTATE_USERNAME")
@@ -108,7 +113,7 @@ if __name__ == "__main__":
     myhost = os.getenv("AWS_REALESTATE_HOSTNAME")
     myport = os.getenv("AWS_REALESTATE_PORT")
     database = "realestate"
-    # query("SELECT * FROM real_estate LIMIT 10", database, myuser, mypassword, myhost, myport)
+    query("SELECT * FROM real_estate LIMIT 10", database, myuser, mypassword, myhost, myport)
     # getData(database, myuser, mypassword, myhost, myport)
     # createdb(database, myuser, mypassword, myhost, myport)
     # updateTables(database, myuser, mypassword, myhost, myport)
