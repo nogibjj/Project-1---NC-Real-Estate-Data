@@ -62,6 +62,8 @@ def updateTables(dbname, username, passwd, hostname, portnum):
     )
 
 # Pull the real estate data into a dataframe
+
+
 def getData(dbname="realestate", username=os.getenv("AWS_REALESTATE_USERNAME"), passwd=os.getenv("AWS_REALESTATE_PASSWORD"), hostname=os.getenv("AWS_REALESTATE_HOSTNAME"), portnum=os.getenv("AWS_REALESTATE_PORT")):
     engine = create_engine(
         f"mysql://{username}:{passwd}@{hostname}:{portnum}/{dbname}")
@@ -71,7 +73,7 @@ def getData(dbname="realestate", username=os.getenv("AWS_REALESTATE_USERNAME"), 
         connection
     )
     return realEstateData
-    
+
 
 # Send a query to the database
 def query(query, database, username, passwd, hostname, portnum):
@@ -85,6 +87,19 @@ def query(query, database, username, passwd, hostname, portnum):
         print(x)
     connection.close()
     pass
+
+# Send a query to the database
+
+
+def queryData(query, dbname="realestate", username=os.getenv("AWS_REALESTATE_USERNAME"), passwd=os.getenv("AWS_REALESTATE_PASSWORD"), hostname=os.getenv("AWS_REALESTATE_HOSTNAME"), portnum=os.getenv("AWS_REALESTATE_PORT")):
+    engine = create_engine(
+        f"mysql://{username}:{passwd}@{hostname}:{portnum}/{dbname}")
+    connection = engine.connect()
+    realEstateData = pd.read_sql(
+        query,
+        connection
+    )
+    return realEstateData
 
 
 if __name__ == "__main__":
