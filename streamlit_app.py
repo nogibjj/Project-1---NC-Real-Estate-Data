@@ -33,13 +33,6 @@ if droppedData.shape[0] > 0:
 else:
     st.write('Insufficient data found for that zip code to make a price prediction.')
 
-fit, reg_chart = pa.get_reg_fit(
-        droppedData,
-        yvar="Opioids_per_Capita",
-        xvar="bed + bath + acre_lot + house_size",
-        alpha=0.05,
-    )
-
 st.subheader("The top homes that match your search criteria are:")
 query = f"SELECT DISTINCT * FROM real_estate WHERE zip_code = {zip} AND bed = {beds} AND bath = {baths} AND (house_size BETWEEN {.8 * sqft} AND {1.2 * sqft})LIMIT 10"
 df = db.queryData(query)
