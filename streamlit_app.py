@@ -18,7 +18,7 @@ regr = linear_model.LinearRegression()
 droppedData = regressiondf[['bed', 'bath', 'acre_lot', 'house_size','price']].dropna()
 if droppedData.shape[0] > 0:
     regr.fit(droppedData[['bed', 'bath', 'acre_lot', 'house_size']], droppedData['price'])
-    predictor = pd.DataFrame({'bed': beds, 'bath': baths, 'acre_lot': acre, 'house_size': sqft})
+    predictor = pd.DataFrame({'bed': [beds], 'bath': [baths], 'acre_lot': [acre], 'house_size': [sqft]})
     st.write(f'The expected price for your home search is: {np.round(regr.predict(predictor))}')
 else:
     st.write('Insufficient data found for that zip code to make a price prediction.')
