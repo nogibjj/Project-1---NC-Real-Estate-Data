@@ -5,10 +5,10 @@ import altair as alt
 
 def get_reg_fit(data, yvar, xvar, alpha=0.05):
 
-    xaxis = xvar.split(" + ")[0]
+    # xaxis = xvar.split(" + ")[0]
 
     # Grid for predicted values
-    x = data.loc[pd.notnull(data[yvar]), xaxis]
+    x = data.loc[pd.notnull(data[yvar]), xvar]
     xmin = x.min()
     xmax = x.max()
     step = (xmax - xmin) / 100
@@ -26,7 +26,7 @@ def get_reg_fit(data, yvar, xvar, alpha=0.05):
         alt.Chart(predictions)
         .mark_line()
         .encode(
-            x=xaxis,
+            x=xvar,
             y=alt.Y(yvar, axis=alt.Axis(title="Price"))
         )
         .properties(title="Pricing Regression")
@@ -35,7 +35,7 @@ def get_reg_fit(data, yvar, xvar, alpha=0.05):
         alt.Chart(predictions)
         .mark_errorband()
         .encode(
-            x=xaxis,
+            x=xvar,
             y=alt.Y("ci_low", title="Price"),
             y2="ci_high",
         )

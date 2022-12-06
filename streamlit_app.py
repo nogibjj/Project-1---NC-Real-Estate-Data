@@ -25,7 +25,7 @@ if droppedData.shape[0] > 0:
     fit, reg_chart = pa.get_reg_fit(
         droppedData,
         yvar="price",
-        xvar="bed + bath + acre_lot + house_size",
+        xvar="bed",
         alpha=0.05,
     )
     base = alt.Chart(droppedData).mark_point().encode(x = 'bed', y = 'price')
