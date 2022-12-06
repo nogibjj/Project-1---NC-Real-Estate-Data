@@ -9,6 +9,7 @@ beds = int(st.text_input("Please input the number of bed that you are looking fo
 baths = float(st.text_input("Please input the number of bathrooms that you are looking for in your home:", "2"))
 sqft = float(st.text_input("Please input the square footage that you are looking for in your home:", "1000"))
 
+st.write(os.getenv("AWS_REALESTATE_PORT"))
 df = db.getData()
 st.table(df.tail())
 criteria = f"(bed == {beds})"
