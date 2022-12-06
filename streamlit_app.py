@@ -10,7 +10,10 @@ baths = float(st.text_input("Please input the number of bathrooms that you are l
 sqft = float(st.text_input("Please input the square footage that you are looking for in your home:", "1000"))
 
 df = db.getData()
+st.table(df.tail())
 criteria = f"(bed == {beds})"
-filteredDF = filter.filterdf(df, criteria)
+st.write(criteria)
+st.table(data[data.eval(criteria)].head())
+# filteredDF = filter.filterdf(df, criteria)
 st.subheader("The top homes that match your search criteria are:")
-st.table(filteredDF.head())
+# st.table(filteredDF.head())
