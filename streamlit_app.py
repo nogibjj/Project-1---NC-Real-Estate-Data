@@ -6,8 +6,8 @@ import numpy as np
 
 st.title("Nick Carroll's Real Estate Analysis App")
 
-zip = st.text_input("Please input the zip code that you are searching for a home in:", "10001")
-beds = int(st.text_input("Please input the number of bed that you are looking for in your home:", "2"))
+zip = st.text_input("Please input the zip code that you are searching for a home in:", "00601")
+beds = int(st.text_input("Please input the number of bed that you are looking for in your home:", "3"))
 baths = float(st.text_input("Please input the number of bathrooms that you are looking for in your home:", "2"))
 sqft = float(st.text_input("Please input the square footage that you are looking for in your home:", "1000"))
 acre = float(st.text_input("Please input the lot size that you are looking for in your home:", "0.5"))
@@ -19,7 +19,7 @@ droppedData = regressiondf[['bed', 'bath', 'acre_lot', 'house_size','price']].dr
 if droppedData.shape[0] > 0:
     regr.fit(droppedData[['bed', 'bath', 'acre_lot', 'house_size']], droppedData['price'])
     predictor = pd.DataFrame({'bed': [beds], 'bath': [baths], 'acre_lot': [acre], 'house_size': [sqft]})
-    st.write(f'The expected price for your home search is: {np.round(regr.predict(predictor))}')
+    st.write(f'The expected price for your home search is: {np.round(regr.predict(predictor))[0]:.2f}')
 else:
     st.write('Insufficient data found for that zip code to make a price prediction.')
 
