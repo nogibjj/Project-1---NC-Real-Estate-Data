@@ -1,5 +1,6 @@
 import streamlit as st
 import createdb as db
+import pandas as pd
 from sklearn import linear_model
 import numpy as np
 
