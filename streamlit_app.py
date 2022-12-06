@@ -3,6 +3,8 @@ import createdb as db
 import pandas as pd
 from sklearn import linear_model
 import numpy as np
+import plotAnalysis as pa
+import altair as alt
 
 st.title("Nick Carroll's Real Estate Analysis App")
 
@@ -19,9 +21,24 @@ droppedData = regressiondf[['bed', 'bath', 'acre_lot', 'house_size','price']].dr
 if droppedData.shape[0] > 0:
     regr.fit(droppedData[['bed', 'bath', 'acre_lot', 'house_size']], droppedData['price'])
     predictor = pd.DataFrame({'bed': [beds], 'bath': [baths], 'acre_lot': [acre], 'house_size': [sqft]})
-    st.write(f'The expected price for your home search is: {np.round(regr.predict(predictor))[0]:.2f}')
+    st.write(f'The expected price for your home search is: {np.round(regr.predict(predictor))[0]:,.2f}')
+    fit, reg_chart = pa.get_reg_fit(
+        droppedData,
+        yvar="price",
+        xvar="bed + bath + acre_lot + house_size",
+        alpha=0.05,
+    )
+    base = alt.Chart(droppedData).mark_point().encode(x = 'bed', y = 'price')
+    st.alt_chart(base + reg_chart)
 else:
     st.write('Insufficient data found for that zip code to make a price prediction.')
+
+fit, reg_chart = pa.get_reg_fit(
+        droppedData,
+        yvar="Opioids_per_Capita",
+        xvar="bed + bath + acre_lot + house_size",
+        alpha=0.05,
+    )
 
 st.subheader("The top homes that match your search criteria are:")
 query = f"SELECT DISTINCT * FROM real_estate WHERE zip_code = {zip} AND bed = {beds} AND bath = {baths} AND (house_size BETWEEN {.8 * sqft} AND {1.2 * sqft})LIMIT 10"
