@@ -4,6 +4,7 @@
 import dask.dataframe as dd
 import dask
 from dask.distributed import Client
+import pandas as pd
 
 # Read in the data
 def readData(file = 'datasets/predicted-data.csv'):
@@ -12,7 +13,12 @@ def readData(file = 'datasets/predicted-data.csv'):
 
 # Filters data based on criteria in a string formatted to python boolean evaluation
 def filterdf(data, criteria):
-    return dask.compute(data[data.eval(criteria)])[0]
+    if type(data) == type(pd.DataFrame()):
+        return data[data.eval(criteria)]
+    elif type(data) == type(dd.DataFrame()):
+        return dask.compute(data[data.eval(criteria)])[0]
+    else:
+        return "Type Error"
 
 # Test a filter 
 if __name__ == '__main__':
