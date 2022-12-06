@@ -9,7 +9,7 @@ beds = int(st.text_input("Please input the number of bed that you are looking fo
 baths = float(st.text_input("Please input the number of bathrooms that you are looking for in your home:", "2"))
 sqft = float(st.text_input("Please input the square footage that you are looking for in your home:", "1000"))
 
-query = f"SELECT * FROM real_estate WHERE bed = {beds} LIMIT 10"
+query = f"SELECT * FROM real_estate WHERE zip_code = {zip} AND bed = {beds} AND bath = {baths} AND (house_size BETWEEN {.8 * sqft} AND {1.2 * sqft})LIMIT 10"
 df = db.queryData(query)
 criteria = f"(bed == {beds})"
 st.table(df)
