@@ -29,7 +29,7 @@ if droppedData.shape[0] > 0:
         alpha=0.05,
     )
     base = alt.Chart(droppedData).mark_point().encode(x = 'bed', y = 'price')
-    st.alt_chart(base + reg_chart)
+    st.altair_chart(base + reg_chart)
 else:
     st.write('Insufficient data found for that zip code to make a price prediction.')
 
